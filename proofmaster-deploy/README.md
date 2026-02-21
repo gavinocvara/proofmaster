@@ -40,6 +40,11 @@ vercel
 
 Vercel gives you a live URL like `https://proofmaster-xyz.vercel.app` ✓
 
+> **Important (prevents `NOT_FOUND`)**  
+> This repository's app lives in the `proofmaster-deploy/` folder.  
+> If you import from GitHub, set **Project Settings → General → Root Directory** to `proofmaster-deploy`.  
+> If Root Directory is left at the repo root, Vercel can deploy without your app files and return `NOT_FOUND`.
+
 ### 5. Add Wolfram Alpha AppID (server-side, secure)
 
 1. Get a **free** AppID at https://developer.wolframalpha.com/  
@@ -60,6 +65,19 @@ Vercel gives you a live URL like `https://proofmaster-xyz.vercel.app` ✓
 
 4. Test: Open your live URL → ⚙ Settings → 🧪 Test Connection  
    Should show: ✓ Connected! (2 + 2 = 4)
+
+---
+
+## Troubleshooting `NOT_FOUND` on Vercel
+
+If your deployment URL shows `NOT_FOUND`, verify:
+
+1. **Root Directory** is `proofmaster-deploy`
+2. **Build Command** is `npm run build`
+3. **Output Directory** is `dist`
+4. Your latest commit includes `vercel.json` with SPA rewrite + API route handling
+
+Then trigger a redeploy.
 
 ---
 
