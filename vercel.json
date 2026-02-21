@@ -1,6 +1,8 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "outputDirectory": "dist",
+  "installCommand": "npm install --prefix proofmaster-deploy",
+  "buildCommand": "npm --prefix proofmaster-deploy run build",
+  "outputDirectory": "proofmaster-deploy/dist",
   "functions": {
     "api/**/*.js": {
       "runtime": "nodejs22.x"

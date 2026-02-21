@@ -40,6 +40,11 @@ vercel
 
 Vercel gives you a live URL like `https://proofmaster-xyz.vercel.app` ✓
 
+> **Important (prevents `NOT_FOUND`)**  
+> This repository's app lives in the `proofmaster-deploy/` folder.  
+> If you import from GitHub, set **Project Settings → General → Root Directory** to `proofmaster-deploy`.  
+> If Root Directory is left at the repo root, Vercel can deploy without your app files and return `NOT_FOUND`.
+
 ### 5. Add Wolfram Alpha AppID (server-side, secure)
 
 1. Get a **free** AppID at https://developer.wolframalpha.com/  
@@ -63,12 +68,66 @@ Vercel gives you a live URL like `https://proofmaster-xyz.vercel.app` ✓
 
 ---
 
+## Troubleshooting `NOT_FOUND` on Vercel
+
+If your deployment URL shows `NOT_FOUND`, verify:
+
+1. **Root Directory** is `proofmaster-deploy`
+2. **Build Command** is `npm run build`
+3. **Output Directory** is `dist`
+4. Your latest commit includes `vercel.json` with SPA rewrite + API route handling
+
+Then trigger a redeploy.
+
+If deployment fails with:
+`Environment Variable "WOLFRAM_APP_ID" references Secret "wolfram_app_id", which does not exist.`
+
+Fix in Vercel dashboard:
+1. Open **Project → Settings → Environment Variables**
+2. Remove the broken `WOLFRAM_APP_ID` entry that references `@wolfram_app_id`
+3. Re-add `WOLFRAM_APP_ID` with your actual AppID value (plain value)
+4. Redeploy
+
+Do not use `@wolfram_app_id` unless that secret exists in your Vercel account/team.
+
+---
+
+## Deployment preflight checklist
+
+Run this before releases:
+
+```bash
+npm run preflight:deploy
+```
+
+What it checks:
+- `vercel.json` output directory, API runtime config, and rewrites
+- Required API routes (`/api/wolfram`, `/api/health`)
+- Build output presence (`dist/index.html`)
+- Reminder if Vercel Root Directory should be `proofmaster-deploy`
+
+Quick health check after deploy:
+
+```bash
+curl https://<your-deployment>.vercel.app/api/health
+```
+
+Expected response:
+```json
+{"ok":true,"service":"proofmaster-api","timestamp":"...","hasWolframAppId":true}
+```
+
+---
+
 ## File Structure
 
 ```
 proofmaster-deploy/
 ├── api/
+│   ├── health.js         ← deployment health-check endpoint
 │   └── wolfram.js        ← Vercel serverless proxy (hides your AppID)
+├── scripts/
+│   └── deploy-checklist.mjs  ← pre-release deployment checks
 ├── src/
 │   ├── App.jsx           ← Full React app (1800+ lines)
 │   └── main.jsx          ← React entry point
