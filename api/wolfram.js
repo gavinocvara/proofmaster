@@ -15,7 +15,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: "Missing query parameter ?q=" });
   }
 
-  const appId = process.env.WOLFRAM_APP_ID;
+  const appId = process.env.WOLFRAM_APP_ID || "XQ83L8XH3L";
   if (!appId) {
     return res.status(500).json({
       error: "WOLFRAM_APP_ID not configured. Add it in Vercel → Settings → Environment Variables.",
