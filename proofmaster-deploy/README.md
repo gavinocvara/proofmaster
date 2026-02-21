@@ -81,12 +81,42 @@ Then trigger a redeploy.
 
 ---
 
+## Deployment preflight checklist
+
+Run this before releases:
+
+```bash
+npm run preflight:deploy
+```
+
+What it checks:
+- `vercel.json` output directory, API runtime config, and rewrites
+- Required API routes (`/api/wolfram`, `/api/health`)
+- Build output presence (`dist/index.html`)
+- Reminder if Vercel Root Directory should be `proofmaster-deploy`
+
+Quick health check after deploy:
+
+```bash
+curl https://<your-deployment>.vercel.app/api/health
+```
+
+Expected response:
+```json
+{"ok":true,"service":"proofmaster-api","timestamp":"...","hasWolframAppId":true}
+```
+
+---
+
 ## File Structure
 
 ```
 proofmaster-deploy/
 ├── api/
+│   ├── health.js         ← deployment health-check endpoint
 │   └── wolfram.js        ← Vercel serverless proxy (hides your AppID)
+├── scripts/
+│   └── deploy-checklist.mjs  ← pre-release deployment checks
 ├── src/
 │   ├── App.jsx           ← Full React app (1800+ lines)
 │   └── main.jsx          ← React entry point
