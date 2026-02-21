@@ -79,6 +79,17 @@ If your deployment URL shows `NOT_FOUND`, verify:
 
 Then trigger a redeploy.
 
+If deployment fails with:
+`Environment Variable "WOLFRAM_APP_ID" references Secret "wolfram_app_id", which does not exist.`
+
+Fix in Vercel dashboard:
+1. Open **Project → Settings → Environment Variables**
+2. Remove the broken `WOLFRAM_APP_ID` entry that references `@wolfram_app_id`
+3. Re-add `WOLFRAM_APP_ID` with your actual AppID value (plain value)
+4. Redeploy
+
+Do not use `@wolfram_app_id` unless that secret exists in your Vercel account/team.
+
 ---
 
 ## Deployment preflight checklist
