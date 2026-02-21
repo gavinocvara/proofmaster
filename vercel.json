@@ -17,8 +17,5 @@
       "source": "/(.*)",
       "destination": "/index.html"
     }
-  ],
-  "env": {
-    "WOLFRAM_APP_ID": "@wolfram_app_id"
-  }
+  ]
 }
